@@ -1,4 +1,4 @@
-ocal function Gui()
+local function Gui()
     local Stats = Instance.new("ScreenGui")
     local Frame = Instance.new("Frame")
     local Fist = Instance.new("TextLabel")
