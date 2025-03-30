@@ -1,0 +1,131 @@
+local player = game.Players.LocalPlayer
+
+player.Chatted:Connect(function(message)
+    -- Handle !stack command
+    if message == "!stack" then
+        _G.Loop = true
+        print("Loop gestartet")
+        
+        while _G.Loop do
+            print("_G.Loop:", _G.Loop)
+            
+            -- Dein Loop-Inhalt
+            local kek = true
+            while kek do
+                task.wait()
+
+                -- Hier sollte x und z definiert werden, z.B.:
+                local x, z = 0, 0  -- Beispielwerte für x und z
+
+                -- Dein CFrame-Code
+                pcall(function()
+                    game.Workspace.Main.TrainingCrystal.Part.CFrame = CFrame.new(-4021, 121894, -2111)
+                    task.wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 121969, -2112)
+                    task.wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 121987, -2112)
+                    task.wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 121995, -2112)
+                    task.wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 121969, -2112)
+
+                    -- Beispiel-RemoteEvent Aufruf
+                    local args = { [1] = { [1] = "Skill_SpherePunch", [2] = Vector3.new(x, 100000000000000000000, z) } }
+                    game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
+
+                    local args2 = { [1] = { [1] = "Skill_BulletPunch", [2] = "Left", [3] = Vector3.new(x, 10000, z) } }
+                    game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args2))
+                end)
+
+                if not _G.Loop then
+                    print("Loop gestoppt.")
+                    break
+                end
+            end
+        end
+
+    -- Handle !stop command
+    elseif message == "!stop" then
+        _G.Loop = false
+        print("!stop Befehl empfangen. _G.Loop auf false gesetzt.")
+    end
+
+    -- Handle !Cbring command
+    if message == "!cbring" then
+        -- GUI Code für Cbring
+        local ScreenGui = Instance.new("ScreenGui")
+        local Frame = Instance.new("Frame")
+        local UICorner = Instance.new("UICorner")
+        local TextBox = Instance.new("TextBox")
+        local UICorner_2 = Instance.new("UICorner")
+        local TextButton = Instance.new("TextButton")
+        local UICorner_3 = Instance.new("UICorner")
+        local TextButton_2 = Instance.new("TextButton")
+        local UICorner_4 = Instance.new("UICorner")
+
+        -- Properties und Positionen von GUI-Elementen
+        ScreenGui.Parent = game.CoreGui
+        Frame.Parent = ScreenGui
+        Frame.BackgroundColor3 = Color3.new(0.192157, 0.192157, 0.192157)
+        Frame.Position = UDim2.new(0.25082019, 0, 0.916588247, 0)
+        Frame.Size = UDim2.new(0, 268, 0, 63)
+
+        -- Restliche GUI-Bauelemente
+        UICorner.Parent = Frame
+        TextBox.Parent = Frame
+        TextBox.Position = UDim2.new(0.02, 0, 0.11, 0)
+        TextBox.Size = UDim2.new(0, 151, 0, 48)
+        TextBox.PlaceholderText = "NickName.."
+
+        UICorner_2.Parent = TextBox
+
+        TextButton.Parent = TextBox
+        TextButton.Position = UDim2.new(1.05, 0, 0, 0)
+        TextButton.Size = UDim2.new(0, 47, 0, 48)
+        TextButton.Text = "add"
+
+        UICorner_3.Parent = TextButton
+
+        TextButton_2.Parent = TextBox
+        TextButton_2.Position = UDim2.new(1.4, 0, 0, 0)
+        TextButton_2.Size = UDim2.new(0, 47, 0, 48)
+        TextButton_2.Text = "rem"
+
+        UICorner_4.Parent = TextButton_2
+
+        -- TextBox Fokus verloren
+        TextBox.FocusLost:Connect(function(enterPressed)
+            if enterPressed then
+                pcall(function()
+                    for i, v in pairs(game.Players:GetChildren()) do
+                        if string.sub(string.lower(v.Name), 1, string.len(TextBox.Text)) == string.lower(TextBox.Text) then
+                            TextBox.Text = v.Name
+                            break
+                        end
+                    end
+                end)
+            end
+        end)
+
+        -- TextButton 'add' Aktion
+        TextButton.MouseButton1Click:connect(function()
+            local player = TextBox.Text
+            _G.s = true
+            while _G.s == true do task.wait()
+                pcall(function()
+                    if game.Players.LocalPlayer.Character:FindFirstChild("ForceField") or game.Players[player].Character:FindFirstChild("ForceField")
+                    or game.Players:FindFirstChild(player).Character:FindFirstChild("SafeZoneShield") then
+                        game.Players[player].Character.HumanoidRootPart.CFrame = CFrame.new(1337, 1337, 1337)
+                    else
+                        game.Workspace[player].HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.lookVector * 5
+                    end
+                end)
+            end
+        end)
+
+        -- TextButton 'remove' Aktion
+        TextButton_2.MouseButton1Click:connect(function()
+            _G.s = false
+        end)
+    end
+end)
