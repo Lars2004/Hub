@@ -43,6 +43,7 @@ task.wait(1.5)
 
     elseif message == "!stop" then
         _G.Loop = false
+    task.wait(0.2)
     game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(343,249,881)
     end
 
