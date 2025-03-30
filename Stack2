@@ -3,7 +3,7 @@ local player = game.Players.LocalPlayer
 player.Chatted:Connect(function(message)
     if message == "!stack" then
 game.ReplicatedStorage.RemoteEvent:FireServer({"Respawn"})
-task.wait(0.1)
+task.wait(1.5)
         _G.Loop = true
         print("Loop gestartet")
         
