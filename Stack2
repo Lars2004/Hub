@@ -42,9 +42,9 @@ task.wait(1.5)
         end
 
     elseif message == "!stop" then
-    task.wait(0.1)
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(343,249,881)
+    task.wait(0.5)
         _G.Loop = false
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(343,249,881)
     end
 
     if message == "!cbring" then
