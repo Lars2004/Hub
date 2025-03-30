@@ -1,0 +1,121 @@
+local player = game.Players.LocalPlayer
+
+player.Chatted:Connect(function(message)
+    if message == "!stack" then
+game.ReplicatedStorage.RemoteEvent:FireServer({"Respawn"})
+task.wait(1.5)
+        _G.Loop = true
+        print("Loop gestartet")
+        
+        while _G.Loop do
+            print("_G.Loop:", _G.Loop)
+            
+            local kek = true
+            while kek do
+                task.wait()
+
+                local x, z = 0, 0  
+
+                pcall(function()
+                    game.Workspace.Main.TrainingCrystal.Part.CFrame = CFrame.new(-4021, 121894, -2111)
+                    task.wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 121969, -2112)
+                    task.wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 121987, -2112)
+                    task.wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 121995, -2112)
+                    task.wait()
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 121969, -2112)
+
+                    local args = { [1] = { [1] = "Skill_SpherePunch", [2] = Vector3.new(x, 100000000000000000000, z) } }
+                    game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
+
+                    local args2 = { [1] = { [1] = "Skill_BulletPunch", [2] = "Left", [3] = Vector3.new(x, 10000, z) } }
+                    game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args2))
+                end)
+
+                if not _G.Loop then
+
+                    break
+                end
+            end
+        end
+
+    elseif message == "!stop" then
+        _G.Loop = false
+    task.wait(1.5)
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(343,249,881)
+    end
+
+    if message == "!cbring" then
+        local ScreenGui = Instance.new("ScreenGui")
+        local Frame = Instance.new("Frame")
+        local UICorner = Instance.new("UICorner")
+        local TextBox = Instance.new("TextBox")
+        local UICorner_2 = Instance.new("UICorner")
+        local TextButton = Instance.new("TextButton")
+        local UICorner_3 = Instance.new("UICorner")
+        local TextButton_2 = Instance.new("TextButton")
+        local UICorner_4 = Instance.new("UICorner")
+
+        ScreenGui.Parent = game.CoreGui
+        Frame.Parent = ScreenGui
+        Frame.BackgroundColor3 = Color3.new(0.192157, 0.192157, 0.192157)
+        Frame.Position = UDim2.new(0.25082019, 0, 0.916588247, 0)
+        Frame.Size = UDim2.new(0, 268, 0, 63)
+
+        UICorner.Parent = Frame
+        TextBox.Parent = Frame
+        TextBox.Position = UDim2.new(0.02, 0, 0.11, 0)
+        TextBox.Size = UDim2.new(0, 151, 0, 48)
+        TextBox.PlaceholderText = "NickName.."
+
+        UICorner_2.Parent = TextBox
+
+        TextButton.Parent = TextBox
+        TextButton.Position = UDim2.new(1.05, 0, 0, 0)
+        TextButton.Size = UDim2.new(0, 47, 0, 48)
+        TextButton.Text = "add"
+
+        UICorner_3.Parent = TextButton
+
+        TextButton_2.Parent = TextBox
+        TextButton_2.Position = UDim2.new(1.4, 0, 0, 0)
+        TextButton_2.Size = UDim2.new(0, 47, 0, 48)
+        TextButton_2.Text = "rem"
+
+        UICorner_4.Parent = TextButton_2
+
+        TextBox.FocusLost:Connect(function(enterPressed)
+            if enterPressed then
+                pcall(function()
+                    for i, v in pairs(game.Players:GetChildren()) do
+                        if string.sub(string.lower(v.Name), 1, string.len(TextBox.Text)) == string.lower(TextBox.Text) then
+                            TextBox.Text = v.Name
+                            break
+                        end
+                    end
+                end)
+            end
+        end)
+
+        TextButton.MouseButton1Click:connect(function()
+            local player = TextBox.Text
+            _G.s = true
+            while _G.s == true do task.wait()
+                pcall(function()
+                    if game.Players.LocalPlayer.Character:FindFirstChild("ForceField") or game.Players[player].Character:FindFirstChild("ForceField")
+                    or game.Players:FindFirstChild(player).Character:FindFirstChild("SafeZoneShield") then
+                        game.Players[player].Character.HumanoidRootPart.CFrame = CFrame.new(1337, 1337, 1337)
+                    else
+                        game.Workspace[player].HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.lookVector * 5
+                    end
+                end)
+            end
+        end)
+
+        TextButton_2.MouseButton1Click:connect(function()
+            _G.s = false
+        end)
+    end
+end)
