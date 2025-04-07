@@ -103,7 +103,7 @@ local function createCommandsUI()
     textLabel.Parent = frame
     textLabel.Size = UDim2.new(1, 0, 1, 0)
     textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    textLabel.TextSize = 15
+    textLabel.TextSize = 20
     textLabel.TextWrapped = true
     textLabel.BackgroundTransparency = 1
     textLabel.Text = [[
