@@ -6,6 +6,7 @@ local localPlayer = Players.LocalPlayer
 local attackLoopRunning = false
 local hoverLoopRunning = false
 local savedPosition = nil
+local commandsGui = nil  -- Variable für das GUI
 
 -- Spieler anhand Namenspräfix finden
 local function findPlayerByPrefix(prefix)
@@ -66,9 +67,58 @@ local function stopPP()
     end
 end
 
+-- Interface mit Chat-Befehlen erstellen
+local function createCommandsUI()
+    if commandsGui then
+        return  -- Verhindert, dass mehrere GUIs gleichzeitig erstellt werden
+    end
+
+    commandsGui = Instance.new("ScreenGui")
+    commandsGui.Parent = game.CoreGui
+
+    local frame = Instance.new("Frame")
+    frame.Parent = commandsGui
+    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    frame.Position = UDim2.new(0.75, 0, 0.85, 0) -- Unten rechts
+    frame.Size = UDim2.new(0, 300, 0, 200)
+
+    local uiCorner = Instance.new("UICorner")
+    uiCorner.Parent = frame
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Parent = frame
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    textLabel.TextSize = 10.5
+    textLabel.TextWrapped = true
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = [[
+    Available Commands:
+    !PP "PP +"Playername""
+    !stop PP
+    !stack 
+    !stop stop stack
+    !cbring cbring Menu
+    ]]
+end
+
+-- Funktion zum Entfernen des GUIs
+local function removeCommandsUI()
+    if commandsGui then
+        commandsGui:Destroy()  -- Entfernt das GUI
+        commandsGui = nil  -- Setzt die Variable zurück
+    end
+end
+
 -- Chatlistener
 localPlayer.Chatted:Connect(function(message)
-    if message:sub(1, 4) == "!PP " then
+    if message == "!SC" then
+        createCommandsUI()  -- Zeige das Interface mit den Chatbefehlen
+
+    elseif message == "!RI" then
+        removeCommandsUI()  -- Entfernt das Interface
+
+    elseif message:sub(1, 4) == "!PP " then
         local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
         local myHRP = character:WaitForChild("HumanoidRootPart")
         local inputPrefix = message:sub(5)
