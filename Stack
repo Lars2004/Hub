@@ -1,53 +1,127 @@
-local player = game.Players.LocalPlayer
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RemoteEvent = ReplicatedStorage:WaitForChild("RemoteEvent")
+local localPlayer = Players.LocalPlayer
 
-player.Chatted:Connect(function(message)
+local attackLoopRunning = false
+local hoverLoopRunning = false
+local savedPosition = nil
+
+-- Spieler anhand Namenspräfix finden
+local function findPlayerByPrefix(prefix)
+    prefix = prefix:lower()
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player.Name:lower():sub(1, #prefix) == prefix then
+            return player
+        end
+    end
+    return nil
+end
+
+-- Angriff starten
+local function startAttacking(targetPlayer)
+    attackLoopRunning = true
+    task.spawn(function()
+        while attackLoopRunning do
+            pcall(function()
+                RemoteEvent:FireServer({"Skill_SoulAttack_Start", targetPlayer})
+                RemoteEvent:FireServer({"Skill_SoulAttack_End"})
+            end)
+            task.wait()
+        end
+    end)
+end
+
+-- Schweben über Spieler
+local function startHovering(targetPlayer)
+    hoverLoopRunning = true
+    local camera = workspace.CurrentCamera
+    camera.CameraSubject = localPlayer.Character:WaitForChild("Humanoid")
+    camera.CameraType = Enum.CameraType.Custom
+
+    task.spawn(function()
+        while hoverLoopRunning do
+            pcall(function()
+                if targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") and localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                    local targetHRP = targetPlayer.Character.HumanoidRootPart
+                    local myHRP = localPlayer.Character.HumanoidRootPart
+                    myHRP.CFrame = CFrame.new(targetHRP.Position + Vector3.new(0, 30, 0))
+                end
+            end)
+            task.wait(0.05)
+        end
+    end)
+end
+
+local function stopPP()
+    attackLoopRunning = false
+    hoverLoopRunning = false
+
+    if savedPosition then
+        task.delay(0.1, function()
+            if localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") then
+                localPlayer.Character.HumanoidRootPart.CFrame = savedPosition
+            end
+        end)
+    end
+end
+
+-- Chatlistener
+localPlayer.Chatted:Connect(function(message)
+    if message:sub(1, 4) == "!PP " then
+        local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+        local myHRP = character:WaitForChild("HumanoidRootPart")
+        local inputPrefix = message:sub(5)
+        local targetPlayer = findPlayerByPrefix(inputPrefix)
+
+        if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            savedPosition = myHRP.CFrame
+            stopPP()
+            startHovering(targetPlayer)
+            startAttacking(targetPlayer)
+        end
+
+    elseif message == "!stop PP" then
+        stopPP()
+    end
+
+    -- Originale Stack-Funktion
     if message == "!stack" then
-game.ReplicatedStorage.RemoteEvent:FireServer({"Respawn"})
-task.wait(1.5)
+        RemoteEvent:FireServer({"Respawn"})
+        task.wait(1.5)
         _G.Loop = true
-        print("Loop gestartet")
-        
+
         while _G.Loop do
-            print("_G.Loop:", _G.Loop)
-            
             local kek = true
             while kek do
                 task.wait()
 
-                local x, z = 0, 0  
-
+                local x, z = 0, 0
                 pcall(function()
                     game.Workspace.Main.TrainingCrystal.Part.CFrame = CFrame.new(-4021, 121894, -2111)
+                    local hrp = localPlayer.Character.HumanoidRootPart
+                    hrp.CFrame = CFrame.new(-4021, 121969, -2112)
                     task.wait()
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 121969, -2112)
+                    hrp.CFrame = CFrame.new(-4021, 121987, -2112)
                     task.wait()
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 121987, -2112)
+                    hrp.CFrame = CFrame.new(-4021, 121995, -2112)
                     task.wait()
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 121995, -2112)
-                    task.wait()
-                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 121969, -2112)
+                    hrp.CFrame = CFrame.new(-4021, 121969, -2112)
 
-                    local args = { [1] = { [1] = "Skill_SpherePunch", [2] = Vector3.new(x, 100000000000000000000, z) } }
-                    game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
-
-                    local args2 = { [1] = { [1] = "Skill_BulletPunch", [2] = "Left", [3] = Vector3.new(x, 10000, z) } }
-                    game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args2))
+                    RemoteEvent:FireServer({{ "Skill_SpherePunch", Vector3.new(x, 1e20, z) }})
+                    RemoteEvent:FireServer({{ "Skill_BulletPunch", "Left", Vector3.new(x, 10000, z) }})
                 end)
 
-                if not _G.Loop then
-
-                    break
-                end
+                if not _G.Loop then break end
             end
         end
 
     elseif message == "!stop" then
         _G.Loop = false
-    task.wait(1.5)
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(343,249,881)
-    end
+        task.wait(1.5)
+        localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(343, 249, 881)
 
-    if message == "!cbring" then
+    elseif message == "!cbring" then
         local ScreenGui = Instance.new("ScreenGui")
         local Frame = Instance.new("Frame")
         local UICorner = Instance.new("UICorner")
@@ -63,34 +137,31 @@ task.wait(1.5)
         Frame.BackgroundColor3 = Color3.new(0.192157, 0.192157, 0.192157)
         Frame.Position = UDim2.new(0.25082019, 0, 0.916588247, 0)
         Frame.Size = UDim2.new(0, 268, 0, 63)
-
         UICorner.Parent = Frame
+
         TextBox.Parent = Frame
         TextBox.Position = UDim2.new(0.02, 0, 0.11, 0)
         TextBox.Size = UDim2.new(0, 151, 0, 48)
         TextBox.PlaceholderText = "NickName.."
-
         UICorner_2.Parent = TextBox
 
         TextButton.Parent = TextBox
         TextButton.Position = UDim2.new(1.05, 0, 0, 0)
         TextButton.Size = UDim2.new(0, 47, 0, 48)
         TextButton.Text = "add"
-
         UICorner_3.Parent = TextButton
 
         TextButton_2.Parent = TextBox
         TextButton_2.Position = UDim2.new(1.4, 0, 0, 0)
         TextButton_2.Size = UDim2.new(0, 47, 0, 48)
         TextButton_2.Text = "rem"
-
         UICorner_4.Parent = TextButton_2
 
         TextBox.FocusLost:Connect(function(enterPressed)
             if enterPressed then
                 pcall(function()
-                    for i, v in pairs(game.Players:GetChildren()) do
-                        if string.sub(string.lower(v.Name), 1, string.len(TextBox.Text)) == string.lower(TextBox.Text) then
+                    for _, v in pairs(Players:GetChildren()) do
+                        if v.Name:lower():sub(1, #TextBox.Text:lower()) == TextBox.Text:lower() then
                             TextBox.Text = v.Name
                             break
                         end
@@ -99,22 +170,27 @@ task.wait(1.5)
             end
         end)
 
-        TextButton.MouseButton1Click:connect(function()
-            local player = TextBox.Text
+        TextButton.MouseButton1Click:Connect(function()
+            local target = TextBox.Text
             _G.s = true
-            while _G.s == true do task.wait()
+            while _G.s do
+                task.wait()
                 pcall(function()
-                    if game.Players.LocalPlayer.Character:FindFirstChild("ForceField") or game.Players[player].Character:FindFirstChild("ForceField")
-                    or game.Players:FindFirstChild(player).Character:FindFirstChild("SafeZoneShield") then
-                        game.Players[player].Character.HumanoidRootPart.CFrame = CFrame.new(1337, 1337, 1337)
-                    else
-                        game.Workspace[player].HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.lookVector * 5
+                    local targetPlr = Players:FindFirstChild(target)
+                    if targetPlr and targetPlr.Character and targetPlr.Character:FindFirstChild("HumanoidRootPart") then
+                        local myHRP = localPlayer.Character.HumanoidRootPart
+                        local theirHRP = targetPlr.Character.HumanoidRootPart
+                        if localPlayer.Character:FindFirstChild("ForceField") or targetPlr.Character:FindFirstChild("ForceField") or targetPlr.Character:FindFirstChild("SafeZoneShield") then
+                            theirHRP.CFrame = CFrame.new(1337, 1337, 1337)
+                        else
+                            theirHRP.CFrame = myHRP.CFrame + myHRP.CFrame.LookVector * 5
+                        end
                     end
                 end)
             end
         end)
 
-        TextButton_2.MouseButton1Click:connect(function()
+        TextButton_2.MouseButton1Click:Connect(function()
             _G.s = false
         end)
     end
