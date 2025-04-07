@@ -133,7 +133,7 @@ end
 
 -- Chat Commands
 localPlayer.Chatted:Connect(function(message)
-    if message == "!SC2" then
+    if message == "!CC" then
         createCommandsUI()
     elseif message == "!RI" then
         removeCommandsUI()
