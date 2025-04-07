@@ -108,7 +108,7 @@ local function createCommandsUI()
     textLabel.BackgroundTransparency = 1
     textLabel.Text = [[
     Available Commands:
-    !PP "PP +"Playername""
+    !PP "Player"
     !stop PP
     !stack 
     !stop stop stack
