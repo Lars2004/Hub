@@ -200,9 +200,9 @@ localPlayer.Chatted:Connect(function(message)
                     hrp.CFrame = CFrame.new(-4021, 121995, -2112)
                     task.wait()
                     hrp.CFrame = CFrame.new(-4021, 121969, -2112)
-
-                    RemoteEvent:FireServer({{"Skill_SpherePunch", Vector3.new(x, 1e20, z)}})
-                    RemoteEvent:FireServer({{"Skill_BulletPunch", "Left", Vector3.new(x, 10000, z)}})
+                    task.wait()
+                    local args = {[1] = {[1] = "Skill_SpherePunch", [2] = Vector3.new(x,100000000000000000000,z) } } game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
+                    local args = {  [1] = {  [1] = "Skill_BulletPunch",   [2] = "Left",   [3] = Vector3.new(x, 10000, z)  } } game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
                 end)
 
                 if not _G.Loop then break end
