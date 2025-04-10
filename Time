@@ -1,0 +1,83 @@
+-- LocalScript (StarterPlayerScripts)
+
+local UserInputService = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+
+-- GUI erstellen
+local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+screenGui.Name = "TimeTrackerGui"
+screenGui.ResetOnSpawn = false
+
+local frame = Instance.new("Frame", screenGui)
+frame.Size = UDim2.new(0, 220, 0, 60)
+frame.Position = UDim2.new(0, 100, 0, 100)
+frame.BackgroundColor3 = Color3.fromRGB(25, 25, 60)
+frame.BackgroundTransparency = 0.2
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+frame.Name = "TimeFrame"
+
+-- Runde Ecken
+local corner = Instance.new("UICorner", frame)
+corner.CornerRadius = UDim.new(0, 12)
+
+-- Schatten (optional)
+local shadow = Instance.new("UIStroke", frame)
+shadow.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+shadow.Color = Color3.fromRGB(0, 0, 0)
+shadow.Thickness = 1.5
+shadow.Transparency = 0.5
+
+local textLabel = Instance.new("TextLabel", frame)
+textLabel.Size = UDim2.new(1, 0, 1, 0)
+textLabel.BackgroundTransparency = 1
+textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+textLabel.Font = Enum.Font.Gotham
+textLabel.TextSize = 20
+textLabel.Text = "Time in Server: 0s"
+
+-- Minimieren-Status
+local minimized = false
+local toggleKey = Enum.KeyCode.L -- Hotkey
+
+-- Startzeit
+local startTime = tick()
+
+-- Zeitformatierung
+local function formatTime(seconds)
+	local days = math.floor(seconds / 86400)
+	seconds = seconds % 86400
+	local hours = math.floor(seconds / 3600)
+	seconds = seconds % 3600
+	local minutes = math.floor(seconds / 60)
+	seconds = seconds % 60
+
+	local parts = {}
+	if days > 0 then table.insert(parts, days .. "d") end
+	if hours > 0 or #parts > 0 then table.insert(parts, hours .. "h") end
+	if minutes > 0 or #parts > 0 then table.insert(parts, minutes .. "m") end
+	table.insert(parts, seconds .. "s")
+
+	return "Time in Server: " .. table.concat(parts, " ")
+end
+
+-- Zeit aktualisieren
+task.spawn(function()
+	while true do
+		if not minimized then
+			local elapsed = math.floor(tick() - startTime)
+			textLabel.Text = formatTime(elapsed)
+		end
+		task.wait(1)
+	end
+end)
+
+-- Hotkey zum Minimieren/Maximieren
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+	if not gameProcessed and input.KeyCode == toggleKey then
+		minimized = not minimized
+		frame.Visible = not minimized
+	end
+end)
