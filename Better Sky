@@ -1,17 +1,22 @@
- if Lighting:FindFirstChild("SunRays") then
-            Lighting:FindFirstChild("SunRays"):Destroy()
-        end
-        local Skybox = Instance.new("Sky", Lighting)
-        Skybox.CelestialBodiesShown = false
-        local Textures = {
-            SkyboxBk = "http://www.roblox.com/asset/?id=159454299",
-            SkyboxDn = "http://www.roblox.com/asset/?id=159454296",
-            SkyboxFt = "http://www.roblox.com/asset/?id=159454293",
-            SkyboxLf = "http://www.roblox.com/asset/?id=159454286",
-            SkyboxRt = "http://www.roblox.com/asset/?id=159454300",
-            SkyboxUp = "http://www.roblox.com/asset/?id=159454288"
-        }
-        for Direction, TextureUrl in pairs(Textures) do
-            Skybox[Direction] = TextureUrl
-        end
-    end
+local Lighting = game:GetService("Lighting")
+
+if Lighting:FindFirstChild("SunRays") then
+    Lighting:FindFirstChild("SunRays"):Destroy()
+end
+
+local Skybox = Instance.new("Sky")
+Skybox.CelestialBodiesShown = false
+Skybox.Parent = Lighting
+
+local Textures = {
+    SkyboxBk = "http://www.roblox.com/asset/?id=159454299",
+    SkyboxDn = "http://www.roblox.com/asset/?id=159454296",
+    SkyboxFt = "http://www.roblox.com/asset/?id=159454293",
+    SkyboxLf = "http://www.roblox.com/asset/?id=159454286",
+    SkyboxRt = "http://www.roblox.com/asset/?id=159454300",
+    SkyboxUp = "http://www.roblox.com/asset/?id=159454288"
+}
+
+for Direction, TextureUrl in pairs(Textures) do
+    Skybox[Direction] = TextureUrl
+end
