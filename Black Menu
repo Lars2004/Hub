@@ -1,0 +1,164 @@
+ local UIStroke = Instance.new("UIStroke")
+        local Corner = Instance.new("UICorner")
+
+        local objects = {
+            "InvBtn",
+            "LootBoxBtn",
+            "BorderFrame1",
+            "LootBoxFrame",
+            "InvFrame",
+            "GangBtn"
+        }
+        
+        for _, objname in pairs(objects) do
+            local obj = ScreenGui.MenuFrame:FindFirstChild(objname)
+            if obj then
+                obj:Destroy()
+            end
+        end
+
+        local frames = {
+            ScreenGui.MenuFrame.SkillFrame,
+            ScreenGui.MenuFrame.GangFrame,
+            ScreenGui.MenuFrame.SpecialFrame,
+            ScreenGui.MenuFrame.SettingFrame,
+            ScreenGui.MenuFrame.InfoFrame
+        }
+        
+        for _, frame in pairs(frames) do
+            frame.BackgroundColor3 = Color3.new(.039216, .039216, .039216)
+        end
+
+        local textobj = {
+            "NameTxt",
+            "RankTxt",
+            "StatusTxt",
+            "KilledTxt",
+            "MSTxt",
+            "JFTxt",
+            "RepTxt",
+            "GuideTxt"
+        }
+        
+        for _, objectName in pairs(textobj) do
+            local obj = ScreenGui.MenuFrame.InfoFrame:FindFirstChild(objectName)
+            if obj then
+                obj.TextColor3 = Color3.new(1, 1, 1)
+            end
+        end
+        
+        ScreenGui.MenuFrame.BorderSizePixel = 0
+        ScreenGui.MenuFrame.InfoFrame.FSTxt.TextColor3 = Color3.new(1, .352941, .352941)
+        ScreenGui.MenuFrame.InfoFrame.BTTxt.TextColor3 = Color3.new(.988235, .364706, .239216)
+        ScreenGui.MenuFrame.InfoFrame.PPTxt.TextColor3 = Color3.new(.317647, .623529, .984314)
+
+        local buttons = {
+            {name = "InfoBtn", text = "Stats", position = UDim2.new(0, 0, .01, 0)},
+            {name = "SkilBtn", text = "Skills", position = UDim2.new(.25, 0, .01, 0)},
+            {name = "SpecialBtn", text = "Shop", position = UDim2.new(.50, 0, .01, 0)},
+            {name = "SettingBtn", text = "Settings", position = UDim2.new(.75, 0, .01, 0)}
+        }
+        
+        for _, btnConfig in pairs(buttons) do
+            local btn = ScreenGui.MenuFrame:FindFirstChild(btnConfig.name)
+            if btn then
+                btn.Size = UDim2.new(.25, 0, .07, 0)
+                btn.Position = btnConfig.position
+                btn.Text = btnConfig.text
+            end
+        end
+
+        local function setuptextobj(frameName, prefix, count)
+            local frame = ScreenGui.MenuFrame[frameName]
+            for i = 0, count do
+                local obj = frame:FindFirstChild(prefix .. tostring(i))
+                if obj then
+                    obj.TextColor3 = Color3.new(.29,.77,.27)
+                end
+            end
+        end
+        
+        setuptextobj("SkillFrame", "SkillTxt", 19)
+        setuptextobj("SettingFrame", "SettingTxt", 18)
+
+        local buttons = {
+            ScreenGui.DailyQuestFrame.LeftBtn,
+            ScreenGui.DailyQuestFrame.RightBtn,
+            ScreenGui.MenuBtn,
+            ScreenGui.MainQuestFrame.RightBtn,
+            ScreenGui.SpecialQuestFrame.LeftBtn,
+            ScreenGui.SpecialQuestFrame.RightBtn,
+            ScreenGui.WeeklyQuestFrame.LeftBtn
+        }
+        
+        for _, button in pairs(buttons) do
+            if button then
+                button.BackgroundColor3 = Color3.new(0, 0, 0)
+                button.TextColor3 = Color3.new(1, 1, 1)
+                button.BorderColor3 = Color3.new(0, 0, 0)
+            end
+        end
+
+        local rewardFrames = {
+            ScreenGui.MainQuestFrame,
+            ScreenGui.DailyQuestFrame,
+            ScreenGui.SpecialQuestFrame,
+            ScreenGui.WeeklyQuestFrame
+        }
+        
+        for _, questFrame in pairs(rewardFrames) do
+            for _, direction in pairs({"LeftBtn", "RightBtn"}) do
+                local btn = questFrame:FindFirstChild(direction .. "Btn")
+                if btn then
+                    btn.BackgroundColor3 = Color3.new(.039216, .039216, .039216)
+                    btn.TextColor3 = Color3.new(1, 1, 1)
+                end
+            end
+
+            questFrame.ScrollBarImageColor3 = Color3.new(0, 0, 0)
+            questFrame.ScrollBarThickness = 12
+            questFrame.BackgroundColor3 = Color3.new(.039216, .039216, .039216)
+            questFrame.BorderColor3 = Color3.new(0, 0, 0)
+
+            local header = questFrame:FindFirstChild("HeaderTxt1")
+            if header then
+                header.BackgroundColor3 = Color3.new(.039216, .039216, .039216)
+                header.TextColor3 = Color3.new(1, 1, 1)
+            end
+
+            for i = 1, 5 do
+                local maxFrame = questFrame:FindFirstChild("MaxFrame" .. tostring(i))
+                if maxFrame then
+                    maxFrame.BackgroundColor3 = Color3.new(.039216, .039216, .039216)
+                    
+                    local rewardTxt = maxFrame:FindFirstChild("RewardTxt")
+                    if rewardTxt then
+                        local gemBtn = rewardTxt:FindFirstChild("GemImgBtn")
+                        if gemBtn then
+                            gemBtn.ImageColor3 = Color3.new(0, 0, 0)
+                            
+                            local amountTxt = gemBtn:FindFirstChild("AmountTxt")
+                            if amountTxt then
+                                amountTxt.TextColor3 = Color3.new(.039216, .039216, .039216)
+                                amountTxt.TextStrokeColor3 = Color3.new(0, 0, 0)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+        Corner.Parent = ScreenGui.MenuFrame.InfoFrame.RankImgBtn
+        Corner.CornerRadius = UDim.new(1, 0)
+        UIStroke.Parent = ScreenGui.MenuFrame.InfoFrame.RankImgBtn
+        UIStroke.Color = Color3.new(.392157, .392157, .392157)
+        UIStroke.Thickness = 2.5
+
+        local amountTxtBtn = ScreenGui.CurrentGemImgBtn:FindFirstChild("AmountTxtBtn")
+        if amountTxtBtn then
+            amountTxtBtn.TextColor3 = Color3.new(.039216, .039216, .039216)
+            amountTxtBtn.TextStrokeColor3 = Color3.new(0, 0, 0)
+            ScreenGui.CurrentGemImgBtn.ImageColor3 = Color3.new(0, 0, 0)
+        end
+    end
+})
