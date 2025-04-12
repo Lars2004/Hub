@@ -1,0 +1,148 @@
+ local objects = {
+            {Workspace.Terrain, "Water"},
+            {Workspace.Main.TrainingRock, "Rock"},
+            {Workspace.Town.Core, "Material"},
+            {Workspace.Town, "object"},
+            {Workspace.Main, "object"},
+            {Workspace.Main.MouseIgnoreGroup, "object"},
+            {Workspace.Main.QuestNPC.Sathopian, "object"},
+            {Workspace.Main.TrainingArea, "TrainingArea"},
+            {Workspace.Town.Color.Tree1, "Tree"},
+            {Workspace.Town.Color.Tree2, "Tree"},
+            {Workspace.Town.Color.Tree3, "Tree"},
+            {Workspace.Main.TrainingCrystal, "Crystal"},
+            {Workspace.Main.Waterfall, "Waterfall"},
+            {Workspace.Main.Volcano, "Volcano"},
+            {Workspace.Main.IceMountain, "IceMountain"},
+            {Workspace.Main.Tornado, "Tornado"},
+            {Workspace.Town.Color.Floor, "Children"},
+            {Workspace.Town.Core:GetDescendants(), "SpotLight"}
+        }
+        
+        for _, objects1 in pairs(objects) do
+            local object = objects1[1]
+            local property = objects1[2]
+        
+            if object and property then
+                if property == "Water" then
+                    object.WaterColor = Color3.new(0, 0, 0)
+                    object.WaterTransparency = 0
+                elseif property == "Rock" then
+                    object.Color = Color3.new(0, 0, 0)
+                elseif property == "Crystal" then
+                    for _, Child in pairs(object:GetChildren()) do
+                        if Child.Name == "Part" then
+                            Child.Color = Color3.new(0, 0, 0)
+                            Child.Material = Enum.Material.Foil
+                        elseif Child.Name == "CyanGem" then
+                            for _, Child1 in pairs(Child:GetChildren()) do
+                                Child1.Color = Color3.new(0, 0, 0)
+                            end
+                        elseif Child.Name == "cloud" then
+                            for _, Child1 in pairs(Child:GetChildren()) do
+                                Child1.Color = Color3.new(0, 0, 0)
+                            end
+                        end
+                    end
+                elseif property == "Waterfall" then
+                    for _, Child in pairs(object:GetChildren()) do
+                        if Child:IsA("BasePart") then
+                            Child.Color = Color3.new(0, 0, 0)
+                            if Child.Name == "Union" then
+                                Child.UsePartColor = true
+                            end
+                        end
+                    end
+                elseif property == "Volcano" then
+                    for _, Child in pairs(object:GetChildren()) do
+                        if Child.Name == "LavaFloor" then
+                            Child.Color = Color3.new(0, 0, 0)
+                            Child.UsePartColor = true
+                        elseif Child.Name == "Lava" then
+                            for _, Child1 in pairs(Child:GetChildren()) do
+                                if Child1.Name == ("LavaPart" or "TouchPart") then
+                                    Child1.Color = Color3.new(0, 0, 0)
+                                elseif Child1.Name == "SmokeEmitter" then
+                                    Child1.Color = Color3.new(0, 0, 0)
+                                elseif Child1.Name == "Splash" then
+                                    Child1.Color = Color3.new(0, 0, 0)
+                                end
+                            end
+                        elseif Child.Name == "Parts" then
+                            for _, Child1 in pairs(Child:GetChildren()) do
+                                Child1.Color = Color3.new(0, 0, 0)
+                            end
+                        end
+                    end
+                elseif property == "IceMountain" then
+                    for _, Child in pairs(object:GetChildren()) do
+                        Child.Color = Color3.new(0, 0, 0)
+                    end
+                elseif property == "Tornado" then
+                    for _, Child in pairs(object:GetChildren()) do
+                        if Child.Name == "Dust" then
+                            Child.Color = Color3.new(0, 0, 0)
+                        else
+                            Child.Color = Color3.new(0, 0, 0)
+                        end
+                    end
+                elseif property == "TrainingArea" then
+                    for _, Child in pairs(object:GetChildren()) do
+                        if Child.Name:match("StarFSTraining%d") then
+                            Child.Color = Color3.new(0, 0, 0)
+                            for _, Child1 in pairs(Child:GetChildren()) do
+                                if Child1:IsA("BasePart") then
+                                    Child1.Color = Color3.new(0, 0, 0)
+                                end
+                            end
+                        elseif Child.Name:match("PPTrainingPart") then
+                            Child.Color = Color3.new(0, 0, 0)
+                        elseif Child.Name:match("GreenFirePart") then
+                            Child.Color = Color3.new(0, 0, 0)
+                        elseif Child.Name:match("AcidPart") then
+                            Child.Color = Color3.new(0, 0, 0)
+                        elseif Child.Name:match("LavaPart2") then
+                            Child.Color = Color3.new(0, 0, 0)
+                        end
+                    end
+                elseif property == "Tree" then
+                    for _, Leaf in pairs(object.Leaf:GetChildren()) do
+                        Leaf.Color = Color3.new(0, 0, 0)
+                    end
+                    for _, Trunk in pairs(object.Trunk:GetChildren()) do
+                        Trunk.Color = Color3.new(0, 0, 0)
+                    end
+                elseif property == "Children" then
+                    for _, Child in pairs(object:GetChildren()) do
+                        if Child:IsA("BasePart") then
+                            Child.Color = Color3.new(0, 0, 0)
+                            if Child.Name == "Union" then
+                                Child.UsePartColor = true
+                            end
+                        end
+                    end
+                elseif property == "SpotLight" then
+                    for _, Light in pairs(object) do
+                        if Light:IsA("SpotLight") then
+                            Light.Color = Color3.new(0, 0, 0)
+                            Light:GetPropertyChangedSignal("Color"):Connect(function()
+                                Light.Color = Color3.new(0, 0, 0)
+                            end)
+                        end
+                    end
+                elseif property == "object" then 
+                    for _, ObjectToDestroy in pairs(object:GetChildren()) do
+                        if table.find({"Halloween", "GhostRiderCollisionPart", "GrimCollisionPart", "DangerSign", "NPCBlockPart1", "NPCBlockPart2", "CuteFoxyBeanie"}, ObjectToDestroy.Name) then
+                            ObjectToDestroy:Destroy()
+                        end
+                    end
+                elseif property == "Material" then 
+                    for _, Part in pairs(object:GetChildren()) do
+                        if Part:IsA("BasePart") and Part.Material == Enum.Material.Pebble then
+                            Part.Material = Enum.Material.Cobblestone
+                        end
+                    end
+                end
+            end
+        end
+    end
