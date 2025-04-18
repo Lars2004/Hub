@@ -1261,9 +1261,4 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Lars2004/Hub/refs/hea
 end)
 end
 })
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Lars2004/Hub/refs/heads/main/Stack"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Lars2004/Hub/refs/heads/main/Time"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Lars2004/Hub/refs/heads/main/WHub"))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source", true))()
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Lars2004/Hub/refs/heads/main/AntiAFK"))()
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(343,249,881)
