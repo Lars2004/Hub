@@ -93,7 +93,7 @@ Stack.MouseButton1Down:Connect(function()
     local TargetPosition = CFrame.new(1337, 99999, 1337)
 
     if _G.stacking then
-        -- Ball-Touch Loop
+        -- Ball-Stack Loop (ohne firetouchinterest)
         task.spawn(function()
             game:GetService("RunService").RenderStepped:Connect(function()
                 if not _G.stacking then return end
@@ -101,7 +101,6 @@ Stack.MouseButton1Down:Connect(function()
                     local ECH = game:GetService("Players"):FindFirstChild(Enemy)
                     if not ECH or not ECH.Character then return end
 
-                    -- Permanent TP
                     local hrp = ECH.Character:FindFirstChild("HumanoidRootPart")
                     if hrp then
                         hrp.CFrame = TargetPosition
@@ -110,7 +109,6 @@ Stack.MouseButton1Down:Connect(function()
                     local EH = ECH.Character:FindFirstChild("Head")
                     if not EH then return end
 
-                    -- ForceField Check
                     if ECH.Character:FindFirstChildOfClass("ForceField") then return end
                     if game.Players.LocalPlayer.Character:FindFirstChildOfClass("ForceField") then return end
 
@@ -120,7 +118,7 @@ Stack.MouseButton1Down:Connect(function()
                     for _, Ball in pairs(storage:GetDescendants()) do
                         if Ball:IsA("Part") and isnetworkowner(Ball) then
                             pcall(function()
-                                firetouchinterest(Ball, EH, 0)
+                                Ball.CFrame = EH.CFrame + Vector3.new(0, 0.5, 0)
                             end)
                         end
                     end
@@ -154,11 +152,14 @@ Stack.MouseButton1Down:Connect(function()
             end
         end)
 
-        -- Respawn nach 20 Sekunden
+        -- Respawn nach 200 Sekunden
         task.spawn(function()
             task.wait(200)
             if _G.stacking then
-                game.ReplicatedStorage.RemoteEvent:FireServer({"Respawn"})
+                local Remote = game.ReplicatedStorage:FindFirstChild("RemoteEvent")
+                if Remote then
+                    Remote:FireServer({"Respawn"})
+                end
             end
         end)
     end
