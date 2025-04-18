@@ -1261,63 +1261,9 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/Lars2004/Hub/refs/hea
 end)
 end
 })
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(343,249,881)
-function PlayerJoined(text)
-    game:GetService("StarterGui"):SetCore("ChatMakeSystemMessage", {
-        Text = text;
-        Color = Color3.fromRGB(176, 196, 222);
-        Font = Enum.Font.Bangers;
-        TextSize = 25
-    })
-end
-function PlayerLeft(text)
-    game:GetService("StarterGui"):SetCore("ChatMakeSystemMessage", {
-        Text = text;
-        Color = Color3.fromRGB(255, 182, 180);
-        Font = Enum.Font.Bangers;
-        TextSize = 25
-    })
-end
-
-game:GetService("Players").PlayerAdded:Connect(function(whojoined)
-    PlayerJoined(" "..whojoined.Name.."joined the server")
-    if whojoined.Name == "XTheDevil_VIbez09" then
-        PlayerJoined(" "..whojoined.Name.." Owner joined the server")
-    end
-end)
-
-game:GetService("Players").PlayerRemoving:Connect(function(wholeft)
-    PlayerLeft(" "..wholeft.Name.."left The Server")
-    if wholeft.Name == "XTheDevil_VIbez09" then
-        PlayerJoined(" "..wholeft.Name.." Owner left the server")
-    end
-end)
-local Players = game:GetService("Players")
-local TweenService = game:GetService("TweenService")
-local StarterGui = game:GetService("StarterGui")
-
-local LocalPlayer = Players.LocalPlayer
-local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-local Humanoid = Character:WaitForChild("Humanoid")
-local Camera = workspace.CurrentCamera
-
--- Funktion bei Tod
-Humanoid.Died:Connect(function()
-    -- Sofortiges Tween der Kamera (optional, hier als Dummy-Tween behalten)
-    TweenService:Create(Camera, TweenInfo.new(0, Enum.EasingStyle.Linear), {
-        CFrame = Camera.CFrame
-    }):Play()
-
-    -- Nachricht in den Chat schreiben
-    StarterGui:SetCore("ChatMakeSystemMessage", {
-        Text = LocalPlayer.DisplayName .. " (@" .. LocalPlayer.Name .. ") Dead.",
-        Color = Color3.new(1, 0, 0),
-        Font = Enum.Font.GothamBold,
-        TextSize = 20
-    })
-end)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Lars2004/Hub/refs/heads/main/Stack"))()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Lars2004/Hub/refs/heads/main/Time"))()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Lars2004/Hub/refs/heads/main/WHub"))()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source", true))()
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Lars2004/Hub/refs/heads/main/AntiAFK"))()
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(343,249,881)
