@@ -1,0 +1,173 @@
+-- GUI Setup
+local ScreenGui = Instance.new("ScreenGui")
+local main = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+local UICorner = Instance.new("UICorner")
+local Player = Instance.new("TextBox")
+local UICorner_2 = Instance.new("UICorner")
+local Stack = Instance.new("TextButton")
+local UICorner_3 = Instance.new("UICorner")
+local FFAbuse = Instance.new("TextButton")
+local UICorner_4 = Instance.new("UICorner")
+local UserInputService = game:GetService("UserInputService")
+
+_G.stacking = false
+_G.cool = false
+
+ScreenGui.Name = "StackGui"
+ScreenGui.Parent = game.CoreGui
+ScreenGui.ResetOnSpawn = false
+
+main.Name = "main"
+main.Parent = ScreenGui
+main.BackgroundColor3 = Color3.fromRGB(95, 95, 95)
+main.Position = UDim2.new(0.388, 0, 0.55, 0)
+main.Size = UDim2.new(0, 388, 0, 82)
+main.Style = Enum.FrameStyle.RobloxRound
+main.Active = true
+main.Draggable = true
+
+TextLabel.Parent = main
+TextLabel.BackgroundColor3 = Color3.fromRGB(94, 94, 94)
+TextLabel.Position = UDim2.new(-0.008, 0, -0.098, 0)
+TextLabel.Size = UDim2.new(0, 376, 0, 24)
+TextLabel.Font = Enum.Font.Jura
+TextLabel.Text = "Stack    {Made by Devil}"
+TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.TextSize = 19.000
+UICorner.Parent = TextLabel
+
+Player.Name = "Player"
+Player.Parent = main
+Player.BackgroundColor3 = Color3.fromRGB(163, 163, 163)
+Player.Position = UDim2.new(-0.006, 0, 0.402, 0)
+Player.Size = UDim2.new(0, 159, 0, 40)
+Player.Font = Enum.Font.SourceSans
+Player.Text = "Player Here"
+Player.TextColor3 = Color3.fromRGB(0, 0, 0)
+Player.TextSize = 19.000
+UICorner_2.Parent = Player
+
+Stack.Name = "Stack"
+Stack.Parent = main
+Stack.BackgroundColor3 = Color3.fromRGB(161, 161, 161)
+Stack.Position = UDim2.new(0.452, 0, 0.407, 0)
+Stack.Size = UDim2.new(0, 95, 0, 40)
+Stack.Font = Enum.Font.Jura
+Stack.Text = "Stack"
+Stack.TextColor3 = Color3.fromRGB(255, 0, 0)
+Stack.TextSize = 19.000
+UICorner_3.Parent = Stack
+
+FFAbuse.Name = "FF Abuse"
+FFAbuse.Parent = main
+FFAbuse.BackgroundColor3 = Color3.fromRGB(161, 161, 161)
+FFAbuse.Position = UDim2.new(0.745, 0, 0.409, 0)
+FFAbuse.Size = UDim2.new(0, 96, 0, 40)
+FFAbuse.Font = Enum.Font.Jura
+FFAbuse.Text = "AirBoost"
+FFAbuse.TextColor3 = Color3.fromRGB(0, 0, 213)
+FFAbuse.TextSize = 19.000
+UICorner_4.Parent = FFAbuse
+
+-- FF Abuse (mit Toggle)
+FFAbuse.MouseButton1Down:Connect(function()
+    _G.cool = not _G.cool
+
+    if _G.cool then
+        task.spawn(function()
+            while _G.cool do
+                task.wait()
+                local char = game.Players.LocalPlayer.Character
+                if char and char:FindFirstChild("HumanoidRootPart") then
+                    char.HumanoidRootPart.CFrame = char.HumanoidRootPart.CFrame + Vector3.new(0, 1000, 0)
+                end
+            end
+        end)
+    end
+end)
+
+Stack.MouseButton1Down:Connect(function()
+    _G.stacking = not _G.stacking
+    local Enemy = Player.Text
+    local TargetPosition = CFrame.new(1337, 99999, 1337)
+
+    if _G.stacking then
+        -- Ball-Touch Loop
+        task.spawn(function()
+            game:GetService("RunService").RenderStepped:Connect(function()
+                if not _G.stacking then return end
+                pcall(function()
+                    local ECH = game:GetService("Players"):FindFirstChild(Enemy)
+                    if not ECH or not ECH.Character then return end
+
+                    -- Permanent TP
+                    local hrp = ECH.Character:FindFirstChild("HumanoidRootPart")
+                    if hrp then
+                        hrp.CFrame = TargetPosition
+                    end
+
+                    local EH = ECH.Character:FindFirstChild("Head")
+                    if not EH then return end
+
+                    -- ForceField Check
+                    if ECH.Character:FindFirstChildOfClass("ForceField") then return end
+                    if game.Players.LocalPlayer.Character:FindFirstChildOfClass("ForceField") then return end
+
+                    local storage = workspace:FindFirstChild("Storage")
+                    if not storage then return end
+
+                    for _, Ball in pairs(storage:GetDescendants()) do
+                        if Ball:IsA("Part") and isnetworkowner(Ball) then
+                            pcall(function()
+                                firetouchinterest(Ball, EH, 0)
+                            end)
+                        end
+                    end
+                end)
+            end)
+        end)
+
+        -- Attack Loop
+        task.spawn(function()
+            while _G.stacking do
+                wait()
+                local Remote = game.ReplicatedStorage:FindFirstChild("RemoteEvent")
+                if Remote then
+                    local Arguments = {
+                        [1] = {
+                            [1] = "Skill_SpherePunch",
+                            [2] = Vector3.new(0, 10000000, 0)
+                        }
+                    }
+                    Remote:FireServer(unpack(Arguments))
+
+                    local args = {
+                        [1] = {
+                            [1] = "Skill_BulletPunch",
+                            [2] = "Left",
+                            [3] = Vector3.new(1000, 1000, 1000)
+                        }
+                    }
+                    Remote:FireServer(unpack(args))
+                end
+            end
+        end)
+
+        -- Respawn nach 20 Sekunden
+        task.spawn(function()
+            task.wait(200)
+            if _G.stacking then
+                game.ReplicatedStorage.RemoteEvent:FireServer({"Respawn"})
+            end
+        end)
+    end
+end)
+-- GUI mit Taste "P" ein-/ausblenden
+local minimized = false
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed and input.KeyCode == Enum.KeyCode.P then
+        minimized = not minimized
+        ScreenGui.Enabled = not minimized
+    end
+end)
