@@ -1203,6 +1203,8 @@ Default = false,
 Callback = function(lol)
 kek = lol while kek do task.wait()
 pcall( function()
+game.Workspace.Main.TrainingCrystal.Part.CFrame = CFrame.new(-4021, 999999,-2111)
+task.wait()
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 999999, -2112)
 task.wait()
 game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-4021, 999999, -2112)
