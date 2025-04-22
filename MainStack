@@ -164,7 +164,7 @@ Stack.MouseButton1Down:Connect(function()
 
         -- Respawn nach 200 Sekunden
         task.spawn(function()
-            task.wait(120)
+            task.wait(60)
             if _G.stacking then
                 local Remote = game.ReplicatedStorage:FindFirstChild("RemoteEvent")
                 if Remote then
