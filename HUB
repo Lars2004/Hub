@@ -749,7 +749,7 @@ Tab:AddToggle({
             -- RenderStep Loop starten
             tpLoopConnection = RunService.RenderStepped:Connect(function()
                 if kek and myRoot and targetRoot then
-                    local pos = targetRoot.Position + Vector3.new(0, 30, 0)
+                    local pos = targetRoot.Position + Vector3.new(0, 60, 0)
                     myRoot.Velocity = Vector3.zero
                     myRoot.CFrame = CFrame.new(pos)
                 end
