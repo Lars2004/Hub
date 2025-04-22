@@ -43,7 +43,7 @@ local function startHovering(targetPlayer)
                 if targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") and localPlayer.Character and localPlayer.Character:FindFirstChild("HumanoidRootPart") then
                     local targetHRP = targetPlayer.Character.HumanoidRootPart
                     local myHRP = localPlayer.Character.HumanoidRootPart
-                    myHRP.CFrame = CFrame.new(targetHRP.Position + Vector3.new(0, 30, 0))
+                    myHRP.CFrame = CFrame.new(targetHRP.Position + Vector3.new(0, 60, 0))
                 end
             end)
             task.wait(0.05)
