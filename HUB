@@ -566,6 +566,80 @@ end)
 end
 end
 })
+Tab:AddToggle({
+    Name = "Remove rank+nick (Everyone)",
+    Default = false,
+    Callback = function(enabled)
+        local da = enabled
+        local savedStuff = {}  -- speichert geklonte GUIs für Wiederherstellung
+
+        local function removeStuffFromCharacter(player, character)
+            pcall(function()
+                local head = character:WaitForChild("Head")
+
+                local nameGui = head:FindFirstChild("NameBbGui")
+                local rankGui = head:FindFirstChild("RankBbGui")
+
+                if nameGui and nameGui:FindFirstChild("NameTxt") then
+                    -- Speichern
+                    savedStuff[player] = savedStuff[player] or {}
+                    savedStuff[player].NameTxt = nameGui.NameTxt:Clone()
+                    nameGui.NameTxt:Destroy()
+                end
+
+                if rankGui and rankGui:FindFirstChild("RankImg") then
+                    savedStuff[player] = savedStuff[player] or {}
+                    savedStuff[player].RankImg = rankGui.RankImg:Clone()
+                    rankGui.RankImg:Destroy()
+                end
+            end)
+        end
+
+        local function restoreStuff(player, character)
+            pcall(function()
+                local head = character:WaitForChild("Head")
+                local nameGui = head:FindFirstChild("NameBbGui")
+                local rankGui = head:FindFirstChild("RankBbGui")
+                local saved = savedStuff[player]
+
+                if saved then
+                    if saved.NameTxt and nameGui and not nameGui:FindFirstChild("NameTxt") then
+                        saved.NameTxt:Clone().Parent = nameGui
+                    end
+                    if saved.RankImg and rankGui and not rankGui:FindFirstChild("RankImg") then
+                        saved.RankImg:Clone().Parent = rankGui
+                    end
+                end
+            end)
+        end
+
+        local function handlePlayer(player)
+            local function onCharacterAdded(character)
+                task.wait(1)
+                if da then
+                    removeStuffFromCharacter(player, character)
+                else
+                    restoreStuff(player, character)
+                end
+            end
+
+            if player.Character then
+                onCharacterAdded(player.Character)
+            end
+            player.CharacterAdded:Connect(onCharacterAdded)
+        end
+
+        -- Bereits vorhandene Spieler
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            handlePlayer(player)
+        end
+
+        -- Neue Spieler
+        game.Players.PlayerAdded:Connect(function(player)
+            handlePlayer(player)
+        end)
+    end
+})
 local Section = Tab:AddSection({
 Name = "Fun"
 })
