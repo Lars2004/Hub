@@ -126,8 +126,8 @@ local function createCommandsUI()
     !stack "Player"
     !cbring
     !cbring "Player"
-    !AR Activate Respawn 6.5s
-    !SR Stop Respawn
+    !ar Activate Respawn 6.5s
+    !sr Stop Respawn
 	!RI Remove Interface
     ]]
 
@@ -299,13 +299,13 @@ localPlayer.Chatted:Connect(function(message)
             _G.s = false
         end)
 
-    elseif message == "!AR" then
+    elseif message == "!ar" then
         if not respawnActive then
             respawnActive = true
             task.spawn(respawnLoop)
         end
 
-    elseif message == "!SR" then
+    elseif message == "!sr" then
         respawnActive = false
     end
 end)
