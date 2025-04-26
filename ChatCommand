@@ -8,11 +8,11 @@ local hoverLoopRunning = false
 local savedPosition = nil
 local commandsGui = nil
 
--- NEU: Auto-Respawn Variablen
+-- Auto-Respawn Variablen
 local respawnInterval = 6.5
 local respawnActive = false
 
--- Funktion für Auto-Respawn Loop
+-- Auto-Respawn Funktion
 local function respawnLoop()
     while respawnActive do
         RemoteEvent:FireServer({"Respawn"})
@@ -96,7 +96,6 @@ local function bringPlayer(targetPlr)
     end
 end
 
--- Command UI
 local function createCommandsUI()
     if commandsGui then return end
 
@@ -123,16 +122,16 @@ local function createCommandsUI()
     !PP "Player"
     !stop PP
     !stack 
-    !stop stop stack
+    !stop Stack
     !stack "Player"
-    !cbring cbring Menu
+    !cbring
     !cbring "Player"
-    !AR Activate Respawn (6.5)
+    !AR Activate Respawn 6.5s
     !SR Stop Respawn
+	!RI Remove Interface
     ]]
 
     frame.BackgroundTransparency = 0.3
-
     frame.Active = true
     frame.Draggable = true
 end
@@ -144,14 +143,14 @@ local function removeCommandsUI()
     end
 end
 
--- Chat Commands
+-- Chat Command Handler
 localPlayer.Chatted:Connect(function(message)
     if message == "!CC" then
         createCommandsUI()
-        
+
     elseif message == "!RI" then
         removeCommandsUI()
-        
+
     elseif message:sub(1, 4) == "!PP " then
         local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
         local myHRP = character:WaitForChild("HumanoidRootPart")
@@ -201,29 +200,25 @@ localPlayer.Chatted:Connect(function(message)
         end
 
         while _G.Loop do
-            local kek = true
-            while kek do
+            task.wait()
+            pcall(function()
+                game.Workspace.Main.TrainingCrystal.Part.CFrame = CFrame.new(-4021, 121894, -2111)
+                local hrp = localPlayer.Character.HumanoidRootPart
+                hrp.CFrame = CFrame.new(-4021, 121969, -2112)
                 task.wait()
-                local x, z = 0, 0
-                pcall(function()
-                    game.Workspace.Main.TrainingCrystal.Part.CFrame = CFrame.new(-4021, 121894, -2111)
-                    local hrp = localPlayer.Character.HumanoidRootPart
-                    hrp.CFrame = CFrame.new(-4021, 121969, -2112)
-                    task.wait()
-                    hrp.CFrame = CFrame.new(-4021, 121987, -2112)
-                    task.wait()
-                    hrp.CFrame = CFrame.new(-4021, 121995, -2112)
-                    task.wait()
-                    hrp.CFrame = CFrame.new(-4021, 121969, -2112)
-                    task.wait()
-                    local args = {[1] = {[1] = "Skill_SpherePunch", [2] = Vector3.new(x,100000000000000000000,z) } } 
-                    RemoteEvent:FireServer(unpack(args))
-                    local args = {[1] = {[1] = "Skill_BulletPunch", [2] = "Left", [3] = Vector3.new(x,10000,z) } }
-                    RemoteEvent:FireServer(unpack(args))
-                end)
+                hrp.CFrame = CFrame.new(-4021, 121987, -2112)
+                task.wait()
+                hrp.CFrame = CFrame.new(-4021, 121995, -2112)
+                task.wait()
+                hrp.CFrame = CFrame.new(-4021, 121969, -2112)
+                task.wait()
 
-                if not _G.Loop then break end
-            end
+                local args = {[1] = {[1] = "Skill_SpherePunch", [2] = Vector3.new(0, 1e20, 0)}}
+                RemoteEvent:FireServer(unpack(args))
+
+                local args2 = {[1] = {[1] = "Skill_BulletPunch", [2] = "Left", [3] = Vector3.new(0, 10000, 0)}}
+                RemoteEvent:FireServer(unpack(args2))
+            end)
         end
 
     elseif message == "!stop" then
@@ -244,15 +239,15 @@ localPlayer.Chatted:Connect(function(message)
 
         ScreenGui.Parent = game.CoreGui
         Frame.Parent = ScreenGui
-        Frame.BackgroundColor3 = Color3.new(0.192157, 0.192157, 0.192157)
-        Frame.Position = UDim2.new(0.25082019, 0, 0.916588247, 0)
+        Frame.BackgroundColor3 = Color3.fromRGB(49, 49, 49)
+        Frame.Position = UDim2.new(0.25, 0, 0.92, 0)
         Frame.Size = UDim2.new(0, 268, 0, 63)
         UICorner.Parent = Frame
 
         TextBox.Parent = Frame
         TextBox.Position = UDim2.new(0.02, 0, 0.11, 0)
         TextBox.Size = UDim2.new(0, 151, 0, 48)
-        TextBox.PlaceholderText = "NickName.."
+        TextBox.PlaceholderText = "Nickname..."
         UICorner_2.Parent = TextBox
 
         TextButton.Parent = TextBox
@@ -303,9 +298,7 @@ localPlayer.Chatted:Connect(function(message)
         TextButton_2.MouseButton1Click:Connect(function()
             _G.s = false
         end)
-    end
-end)
-    -- HIER KOMMEN DEINE NEUEN AUTORESPAWN BEFEHLE:
+
     elseif message == "!AR" then
         if not respawnActive then
             respawnActive = true
