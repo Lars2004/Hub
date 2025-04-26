@@ -162,19 +162,6 @@ Stack.MouseButton1Down:Connect(function()
             end
         end)
 
-        -- Respawn nach 200 Sekunden
-        task.spawn(function()
-            task.wait(60)
-            if _G.stacking then
-                local Remote = game.ReplicatedStorage:FindFirstChild("RemoteEvent")
-                if Remote then
-                    Remote:FireServer({"Respawn"})
-                end
-            end
-        end)
-    end
-end)
-
 -- GUI mit Taste "P" ein-/ausblenden
 local minimized = false
 UserInputService.InputBegan:Connect(function(input, gameProcessed)
