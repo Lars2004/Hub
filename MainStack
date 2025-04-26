@@ -161,6 +161,8 @@ Stack.MouseButton1Down:Connect(function()
                 end
             end
         end)
+	end
+end)		
 
 -- GUI mit Taste "P" ein-/ausblenden
 local minimized = false
