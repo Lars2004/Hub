@@ -8,6 +8,18 @@ local hoverLoopRunning = false
 local savedPosition = nil
 local commandsGui = nil
 
+-- NEU: Auto-Respawn Variablen
+local respawnInterval = 6.5
+local respawnActive = false
+
+-- Funktion für Auto-Respawn Loop
+local function respawnLoop()
+    while respawnActive do
+        RemoteEvent:FireServer({"Respawn"})
+        task.wait(respawnInterval)
+    end
+end
+
 local function findPlayerByPrefix(prefix)
     prefix = prefix:lower()
     for _, player in ipairs(Players:GetPlayers()) do
@@ -103,7 +115,7 @@ local function createCommandsUI()
     textLabel.Parent = frame
     textLabel.Size = UDim2.new(1, 0, 1, 0)
     textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    textLabel.TextSize = 20
+    textLabel.TextSize = 17
     textLabel.TextWrapped = true
     textLabel.BackgroundTransparency = 1
     textLabel.Text = [[
@@ -115,11 +127,12 @@ local function createCommandsUI()
     !stack "Player"
     !cbring cbring Menu
     !cbring "Player"
+    !AR Activate Respawn (6.5)
+    !SR Stop Respawn
     ]]
 
     frame.BackgroundTransparency = 0.3
 
-    -- Hier wird das GUI bewegbar gemacht
     frame.Active = true
     frame.Draggable = true
 end
@@ -135,8 +148,10 @@ end
 localPlayer.Chatted:Connect(function(message)
     if message == "!CC" then
         createCommandsUI()
+        
     elseif message == "!RI" then
         removeCommandsUI()
+        
     elseif message:sub(1, 4) == "!PP " then
         local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
         local myHRP = character:WaitForChild("HumanoidRootPart")
@@ -201,8 +216,10 @@ localPlayer.Chatted:Connect(function(message)
                     task.wait()
                     hrp.CFrame = CFrame.new(-4021, 121969, -2112)
                     task.wait()
-                    local args = {[1] = {[1] = "Skill_SpherePunch", [2] = Vector3.new(x,100000000000000000000,z) } } game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
-                    local args = {  [1] = {  [1] = "Skill_BulletPunch",   [2] = "Left",   [3] = Vector3.new(x, 10000, z)  } } game:GetService("ReplicatedStorage").RemoteEvent:FireServer(unpack(args))
+                    local args = {[1] = {[1] = "Skill_SpherePunch", [2] = Vector3.new(x,100000000000000000000,z) } } 
+                    RemoteEvent:FireServer(unpack(args))
+                    local args = {[1] = {[1] = "Skill_BulletPunch", [2] = "Left", [3] = Vector3.new(x,10000,z) } }
+                    RemoteEvent:FireServer(unpack(args))
                 end)
 
                 if not _G.Loop then break end
@@ -286,5 +303,16 @@ localPlayer.Chatted:Connect(function(message)
         TextButton_2.MouseButton1Click:Connect(function()
             _G.s = false
         end)
+    end
+end)
+    -- HIER KOMMEN DEINE NEUEN AUTORESPAWN BEFEHLE:
+    elseif message == "!AR" then
+        if not respawnActive then
+            respawnActive = true
+            task.spawn(respawnLoop)
+        end
+
+    elseif message == "!SR" then
+        respawnActive = false
     end
 end)
