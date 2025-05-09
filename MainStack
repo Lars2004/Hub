@@ -86,57 +86,69 @@ FFAbuse.MouseButton1Down:Connect(function()
         end)
     end
 end)
+local TrackedPlayers = {}
 
 Stack.MouseButton1Down:Connect(function()
     _G.stacking = not _G.stacking
     local TargetPosition = CFrame.new(1337, -999999, 1337)
 
     if _G.stacking then
-        -- Ball-Stack Loop mit festem Head-CFrame
+        -- Füge den Spieler, dessen Name im Textfeld steht, zur Liste der fixierten Spieler hinzu
+        local inputName = Player.Text
+        if inputName ~= "" and not TrackedPlayers[inputName] then
+            TrackedPlayers[inputName] = true
+        end
+
+        -- Ball-Stack Loop für alle gespeicherten Spieler
         task.spawn(function()
-            local lastHead = nil
+            local lastHeads = {}
+
             game:GetService("RunService").RenderStepped:Connect(function()
                 if not _G.stacking then return end
-                pcall(function()
-                    local EnemyName = Player.Text
-                    local ECH = game:GetService("Players"):FindFirstChild(EnemyName)
-                    if not ECH then return end
 
-                    local char = ECH.Character
-                    if not char then return end
+                -- Gehe durch alle fixierten Spieler
+                for name, _ in pairs(TrackedPlayers) do
+                    pcall(function()
+                        local ECH = game:GetService("Players"):FindFirstChild(name)
+                        if not ECH then return end
 
-                    local EH = char:FindFirstChild("Head")
-                    if EH and EH ~= lastHead then
-                        lastHead = EH
-                        EH.Anchored = false
-                    end
+                        local char = ECH.Character
+                        if not char then return end
 
-                    if EH then
-                        EH.CFrame = TargetPosition
-                        EH.Velocity = Vector3.zero
-                        EH.RotVelocity = Vector3.zero
-                    end
-
-                    local hrp = char:FindFirstChild("HumanoidRootPart")
-                    if hrp then
-                        hrp.CFrame = TargetPosition + Vector3.new(0, -5, 0)
-                    end
-
-                    local storage = workspace:FindFirstChild("Storage")
-                    if not storage or not EH then return end
-
-                    for _, Ball in pairs(storage:GetDescendants()) do
-                        if Ball:IsA("Part") and isnetworkowner(Ball) then
-                            pcall(function()
-                                Ball.CFrame = EH.CFrame + Vector3.new(0, 0.5, 0)
-                            end)
+                        local EH = char:FindFirstChild("Head")
+                        if EH and EH ~= lastHeads[name] then
+                            lastHeads[name] = EH
+                            EH.Anchored = false
                         end
-                    end
-                end)
+
+                        if EH then
+                            EH.CFrame = TargetPosition
+                            EH.Velocity = Vector3.zero
+                            EH.RotVelocity = Vector3.zero
+                        end
+
+                        local hrp = char:FindFirstChild("HumanoidRootPart")
+                        if hrp then
+                            hrp.CFrame = TargetPosition + Vector3.new(0, -5, 0)
+                        end
+
+                        local storage = workspace:FindFirstChild("Storage")
+                        if not storage or not EH then return end
+
+                        -- Stelle sicher, dass alle Bälle korrekt fixiert werden
+                        for _, Ball in pairs(storage:GetDescendants()) do
+                            if Ball:IsA("Part") and isnetworkowner(Ball) then
+                                pcall(function()
+                                    Ball.CFrame = EH.CFrame + Vector3.new(0, 0.5, 0)
+                                end)
+                            end
+                        end
+                    end)
+                end
             end)
         end)
 
-        -- Attack Loop
+        -- Angriffsschleife
         task.spawn(function()
             while _G.stacking do
                 wait()
@@ -161,8 +173,8 @@ Stack.MouseButton1Down:Connect(function()
                 end
             end
         end)
-	end
-end)		
+    end
+end)
 
 -- GUI mit Taste "P" ein-/ausblenden
 local minimized = false
@@ -171,4 +183,35 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
         minimized = not minimized
         ScreenGui.Enabled = not minimized
     end
+end)
+
+-- Schließen-X (schön gestaltet)
+local CloseButton = Instance.new("TextButton")
+CloseButton.Parent = main
+CloseButton.Size = UDim2.new(0, 24, 0, 24)
+CloseButton.Position = UDim2.new(1, -28, -0.24, 10)
+CloseButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+CloseButton.Text = "✕" -- schönes Unicode X
+CloseButton.TextColor3 = Color3.fromRGB(255, 85, 85)
+CloseButton.TextSize = 18
+CloseButton.Font = Enum.Font.GothamBold
+CloseButton.BorderSizePixel = 0
+CloseButton.AutoButtonColor = false
+
+local CloseUICorner = Instance.new("UICorner")
+CloseUICorner.CornerRadius = UDim.new(0, 6)
+CloseUICorner.Parent = CloseButton
+
+-- Hover-Effekt
+CloseButton.MouseEnter:Connect(function()
+	CloseButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+end)
+
+CloseButton.MouseLeave:Connect(function()
+	CloseButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+end)
+
+-- Klick-Funktion
+CloseButton.MouseButton1Click:Connect(function()
+	ScreenGui:Destroy()
 end)
